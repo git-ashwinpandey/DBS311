@@ -20,6 +20,48 @@ WHERE
     EXTRACT(MONTH from hire_date) IN (5, 11)
 ORDER BY hire_date DESC;
 
+--2
+SELECT
+    'EMP# ' || employee_id || ' named ' ||
+    first_name || ' ' || last_name || ' who is ' ||
+    job_id || ' will have a new salary of ' ||
+    (salary * 1.18)
+FROM employees
+WHERE 
+    (salary NOT BETWEEN 6500 AND 11500) AND
+    job_id NOT LIKE '%PRES' AND job_id NOT LIKE '%VP' AND
+    employee_id IN (
+        SELECT manager_id
+        FROM employees
+    )
+
+UNION
+
+SELECT
+    'EMP# ' || employee_id || ' named ' ||
+    first_name || ' ' || last_name || ' who is ' ||
+    job_id || ' will have a new salary of ' ||
+    (salary * 1.25)
+FROM employees
+WHERE 
+    (salary NOT BETWEEN 6500 AND 11500) AND
+    job_id LIKE '%VP';
+
+
+
+
+--3
+SELECT
+    last_name,
+    salary,
+    job_id,
+    manager_id,
+    (salary + salary * commission_pct) * 12 + 1000
+FROM employees
+WHERE 
+    commission_pct IS NOT NULL OR
+    department_id = '80' AND 
+
 /*
 7.	Display alphabetically the full name, job, salary (formatted as a currency amount incl. thousand separator, but no decimals) and department number for each employee who earns less than the best paid unionized employee (i.e. not the president nor any manager nor any VP), and who work in either SALES or MARKETING department.  
 •	Full name should be displayed as Firstname Lastname and should have the heading Employee. 
