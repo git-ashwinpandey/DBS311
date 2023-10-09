@@ -20,6 +20,144 @@ WHERE
     EXTRACT(MONTH from hire_date) IN (5, 11)
 ORDER BY hire_date DESC;
 
+--2
+SELECT
+    'EMP# ' || employee_id || ' named ' ||
+    first_name || ' ' || last_name || ' who is ' ||
+    job_id || ' will have a new salary of ' ||
+    TO_CHAR((salary * 1.18), '$999999') AS "Employees with increased Pay"
+FROM employees
+WHERE 
+    (salary NOT BETWEEN 6500 AND 11500) AND
+    job_id NOT LIKE '%PRES' AND job_id NOT LIKE '%VP' AND
+    employee_id IN (
+        SELECT manager_id
+        FROM employees
+    )
+
+UNION
+
+SELECT
+    'EMP# ' || employee_id || ' named ' ||
+    first_name || ' ' || last_name || ' who is ' ||
+    job_id || ' will have a new salary of' ||
+    TO_CHAR((salary * 1.25), '$999999') AS "Employees with increased Pay"
+FROM employees
+WHERE 
+    (salary NOT BETWEEN 6500 AND 11500) AND
+    job_id LIKE '%VP';
+
+
+--3
+SELECT
+    last_name,
+    salary,
+    job_id,
+    manager_id,
+    TO_CHAR(((salary + salary * commission_pct) * 12 + 1000), '$999,999.99') AS "Total Income"
+FROM employees
+WHERE
+    (commission_pct IS NULL OR department_id = '80') AND
+    (salary + salary* commission_pct + 1000) > 15000
+ORDER BY "Total Income" DESC;
+
+--4
+SELECT
+    department_id,
+    job_id,
+    MIN(salary) AS "Lowest Dept/Job Pay"
+FROM employees
+WHERE salary BETWEEN 6500 AND 16800
+GROUP BY
+    department_id,
+    job_id
+
+MINUS
+
+SELECT
+    department_id,
+    job_id,
+    salary
+FROM employees
+WHERE 
+    department_id IN (60, 80) OR
+    UPPER(job_id) LIKE '%REP'
+
+
+--5
+SELECT 
+    last_name,
+    salary,
+    job_id
+FROM (
+    SELECT *
+    FROM employees e
+        JOIN departments d on e.department_id = d.department_id
+        JOIN locations l ON d.location_id = l.location_id
+    WHERE 
+        l.country_id != 'US' AND
+        e.job_id NOT IN ('AD_VP', 'AD_PRES')
+)
+WHERE salary > (
+    SELECT employee_id
+    FROM employees
+    WHERE salary > (
+        SELECT MIN(salary)
+        FROM employees e2
+        WHERE e2.department_id = department_id
+    )
+);
+
+SELECT
+    e.last_name,
+    e.salary,
+    e.job_id
+FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    JOIN locations l ON d.location_id = l.location_id
+WHERE 
+    l.country_id != 'US' 
+    AND e.job_id NOT IN ('AD_PRES', 'AD_VP')
+    AND e.salary > (
+        SELECT MIN(salary)
+        FROM employees e2
+        WHERE 
+            e2.department_id = e.department_id
+    )
+ORDER BY e.job_id;
+
+
+SELECT
+    e.last_name,
+    e.salary,
+    e.job_id,
+    e.DEPARTMENT_ID,
+    l.country_id
+FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    JOIN locations l ON d.location_id = l.location_id;
+
+
+
+--6
+SELECT
+    *
+FROM (
+    SELECT
+        last_name,
+        salary,
+        job_id
+    FROM employees
+    WHERE department_id IN (20, 60)
+)
+WHERE salary < (
+    SELECT MIN(salary)
+    FROM employees
+    WHERE department_id = 110
+)
+ORDER BY last_name ASC;
+
+
 /*
 7.	Display alphabetically the full name, job, salary (formatted as a currency amount incl. thousand separator, but no decimals) and department number for each employee who earns less than the best paid unionized employee (i.e. not the president nor any manager nor any VP), and who work in either SALES or MARKETING department.  
 •	Full name should be displayed as Firstname Lastname and should have the heading Employee. 
