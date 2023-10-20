@@ -1,0 +1,238 @@
+STRING FUNCTIONS
+1. to_char(value, format);
+    //format
+        fm -> removes trailing space
+        
+    // value -> date object
+       format
+        th -> adds st, nd etc..
+        ddmmyy -> day, month, year
+
+2. 
+upper(x) -> Uppercase
+lower(x) -> Lowercase
+initcap(x) -> 1st letter of each word is Uppercase
+
+3. 
+concat(string 1, string 2);
+    string1
+        The first string to concatenate.
+    string2
+        The second string to concatenate.
+    Returns
+        The CONCAT function returns a string value.
+
+4. SUBSTR( string, start_position [, length ] )
+    string
+        The source string.
+    start_position
+        The starting position for extraction. The first position in the string is always 1.
+    length
+        Optional. It is the number of characters to extract. If this parameter is omitted, the SUBSTR function will return the entire string.
+
+
+5. LENGTH( string1 )
+    string1
+        The string to return the length for.
+    Returns
+        The LENGTH function returns a numeric value.
+        If string1 is NULL, then the LENGTH function will return NULL.
+
+
+6. 
+LPAD( string1, padded_length [, pad_string] )
+    string1
+        The string to pad characters to (the left-hand side).
+    padded_length
+        The number of characters to return. If the padded_length is smaller than the original string, 
+        the LPAD function will truncate the string to the size of padded_length.
+    pad_string
+        Optional. This is the string that will be padded to the left-hand side of string1. 
+        If this parameter is omitted, the LPAD function will pad spaces to the left-side of string1.
+    
+    Example:
+        LPAD('tech', 7);
+        Result: '   tech'
+
+        LPAD('tech', 2);
+        Result: 'te'
+
+        LPAD('tech', 8, '0');
+        Result: '0000tech'
+
+
+7. 
+RPAD( string1, padded_length [, pad_string] )
+    string1
+        The string to pad characters to (the right-hand side).
+    padded_length
+        The number of characters to return. If the padded_length is smaller than the original string, 
+        the RPAD function will truncate the string to the size of padded_length.
+    pad_string
+        Optional. This is the string that will be padded to the right-hand side of string1. 
+        If this parameter is omitted, the RPAD function will pad spaces to the right-side of string1.
+
+    Example:
+        RPAD('tech', 7)
+        Result: 'tech   '
+
+        RPAD('tech', 2)
+        Result: 'te'
+
+        RPAD('tech', 8, '0')
+        Result: 'tech0000'
+
+8.
+TRIM( [ [ LEADING | TRAILING | BOTH ] trim_character FROM ] string1 )
+    If you do not choose a value for the first parameter (LEADING, TRAILING, BOTH), 
+    the TRIM function will remove trim_character from both the front and end of string1.
+
+    TRIM(LEADING '0' FROM '000123')
+    Result: '123'
+
+    TRIM(TRAILING '1' FROM 'Tech1')
+    Result: 'Tech'
+
+9.
+TO_DATE( string1 [, format_mask] [, nls_language] )
+    TO_DATE('2003/07/09', 'yyyy/mm/dd')
+    Result: date value of July 9, 2003
+
+    TO_DATE('070903', 'MMDDYY')
+    Result: date value of July 9, 2003
+
+    TO_DATE('20020315', 'yyyymmdd')
+    Result: date value of Mar 15, 2002
+
+10.
+REPLACE( string1, string_to_replace [, replacement_string] )
+    string1
+        The string to replace a sequence of characters with another set of characters.
+    string_to_replace
+        The string that will be searched for in string1.
+    replacement_string
+        Optional. All occurrences of string_to_replace will be replaced with replacement_string in string1. 
+        If the replacement_string parameter is omitted, the REPLACE function simply removes all 
+        occurrences of string_to_replace, and returns the resulting string.
+
+    REPLACE('123tech123', '123');
+    Result:'tech'
+
+    REPLACE('222tech', '2', '3');
+    Result: '333tech'
+
+11.
+ROUND( number [, decimal_places] )
+TRUNC( number [, decimal_places] )
+    decimal_places
+        Optional. The number of decimal places rounded to. This value must be an integer. 
+        If this parameter is omitted, the ROUND function will round the number to 0 decimal places.
+
+13. 
+MOD( m, n ) -> returns the remainder of m divided by n.
+    MOD(11.6, 2)
+    Result: 1.6
+
+    MOD(11.6, 2.1)
+    Result: 1.1
+
+    MOD(-15, 4)
+    Result: -3
+
+14.
+CEIL( number )  -> function returns the smallest integer value that is greater than or equal to a number.
+FLOOR( number ) -> returns the largest integer value that is equal to or less than a number.
+
+
+16.
+SYSDATE -> function returns the current system date and time on your local database.
+CURRENT_DATE -> returns the current date in the time zone of the current SQL session.
+
+17.
+NEXT_DAY( date, weekday ) -> function returns the first weekday that is greater than a date.
+    
+    NEXT_DAY('01-Aug-03', 'TUESDAY')  
+    Result: '05-Aug-03'
+    //First tuesday after date.
+
+18.
+LAST_DAY( date ) -> last day of the month
+    LAST_DAY(TO_DATE('2003/03/15', 'yyyy/mm/dd'))
+    Result: Mar 31, 2003
+
+    LAST_DAY(TO_DATE('2003/02/03', 'yyyy/mm/dd'))
+    Result: Feb 28, 2003
+
+19.
+ADD_MONTHS( date1, number_months ) -> function returns a date with a specified number of months added.
+    ADD_MONTHS('01-Aug-03', 3)
+    Result: '01-Nov-03'
+
+    ADD_MONTHS('01-Aug-03', -3)
+    Result: '01-May-03'
+
+20.
+MONTHS_BETWEEN( date1, date2 ) -> function returns the number of months between date1 and date2.
+    (calculates the fraction based on a 31-day month)
+
+    MONTHS_BETWEEN (TO_DATE ('2003/01/01', 'yyyy/mm/dd'), TO_DATE ('2003/03/14', 'yyyy/mm/dd') )
+    would return -2.41935483870968
+
+21.
+EXTRACT (
+    { YEAR | MONTH | DAY | HOUR | MINUTE | SECOND }
+    | { TIMEZONE_HOUR | TIMEZONE_MINUTE }
+    | { TIMEZONE_REGION | TIMEZONE_ABBR }
+    FROM { date_value | interval_value } )
+
+    You can only extract YEAR, MONTH, and DAY from a DATE.
+    You can only extract TIMEZONE_HOUR and TIMEZONE_MINUTE from a timestamp with a time zone datatype.
+
+    EXTRACT(YEAR FROM DATE '2003-08-22')
+    Result: 2003
+
+    EXTRACT(MONTH FROM DATE '2003-08-22')
+    Result: 8
+
+22. 
+TRUNC ( date [, format ] ) -> function returns a date truncated to a specific unit of measure
+    TRUNC(TO_DATE('22-AUG-03'), 'YEAR') //truncs both year and month
+    Result: '01-JAN-03'
+
+    TRUNC(TO_DATE('22-AUG-03'), 'Q') //truncs down a quarter
+    Result: '01-JUL-03'
+
+    TRUNC(TO_DATE('22-AUG-03'), 'MONTH') // truncs month to start of august
+    Result: '01-AUG-03'
+
+    TRUNC(TO_DATE('22-AUG-03'), 'DDD') // nothing to trunc for ddd
+    Result: '22-AUG-03'
+
+    TRUNC(TO_DATE('22-AUG-03'), 'DAY') // truncs down to the start of the week
+    Result: '17-AUG-03'
+
+23. 
+ROUND( date [, format] ) -> function returns a date rounded to a specific unit of measure.
+
+
+24.
+NVL( string1, replace_with ) -> lets you substitute a value when a null value is encountered.
+    string1
+        The string to test for a null value.
+    replace_with
+        The value returned if string1 is null.
+    
+    SELECT NVL(commission, 0)
+    FROM sales;
+
+25.
+NVL2( string1, value_if_not_null, value_if_null ) 
+    string1
+        The string to test for a null value.
+    value_if_not_null
+        The value returned if string1 is not null.
+    value_if_null
+        The value returned if string1 is null.
+
+    select NVL2(supplier_city, 'Completed', 'n/a')
+    from suppliers;
