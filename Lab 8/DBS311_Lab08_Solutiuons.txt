@@ -1,0 +1,76 @@
+// DBS311 - Lab 08 
+// Clint's Solutions
+// Fall 2021
+// -----------------------------
+
+> use inventory
+
+// Q1
+> db.products.find({},{name:1,monthly_price:1, _id:0})
+
+// Q2
+// had to google for this answer - uses regex
+> db.products.find({type:/accessory/},{name:1, price:1, _id:0})
+
+{ "name" : "AC3 Series Charger", "price" : 19 }
+{ "name" : "AC3 Case Green", "price" : 12 }
+{ "name" : "AC3 Case Black", "price" : NaN }
+{ "name" : "AC3 Case Red", "price" : 12 }
+
+// Q3
+> db.products.find({"$and": [
+... {monthly_price:{"$lte":19}},{monthly_price:{"$gte":13}}
+... ]}
+... ,{name:1, monthly_price:1, _id:0})
+//note: no results
+
+//Q4
+> db.products.find({"type":{"$ne":"accessory"}}, {name:1, price:1, type:1})
+ -- OR
+> db.products.find({type: {"$not":{"$regex":/accessory/}}}, {name:1, price:1, type:1})
+
+{ "_id" : "ac3", "name" : "AC3 Phone", "type" : "phone", "price" : 200 }
+{ "_id" : "ac7", "name" : "AC7 Phone", "type" : "phone", "price" : 320 }
+{ "_id" : "507d95d5719dbef170f15bfb", "name" : "Phone Extended Warranty", "type" : "warranty", "price" : 38 }
+{ "_id" : "507d95d5719dbef170f15bfe", "name" : "Phone Service Basic Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15bff", "name" : "Phone Service Core Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15c00", "name" : "Phone Service Family Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15c01", "name" : "Cable TV Basic Service Package", "type" : "tv" }
+
+// Q5
+> db.products.find({"$or": [{type:"accessory"},{type:"service"}]},{name:1,price:1,type:1})
+
+
+> db.products.find({"$or": [{type:/accessory/},{type:/service/}]},{name:1,price:1,type:1})
+
+{ "_id" : "507d95d5719dbef170f15bf9", "name" : "AC3 Series Charger", "type" : "accessory,charger", "price" : 19 }
+{ "_id" : "507d95d5719dbef170f15bfa", "name" : "AC3 Case Green", "type" : "accessory,case", "price" : 12 }
+{ "_id" : "507d95d5719dbef170f15bfc", "name" : "AC3 Case Black", "type" : "accessory,case", "price" : NaN }
+{ "_id" : "507d95d5719dbef170f15bfd", "name" : "AC3 Case Red", "type" : "accessory,case", "price" : 12 }
+{ "_id" : "507d95d5719dbef170f15bfe", "name" : "Phone Service Basic Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15bff", "name" : "Phone Service Core Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15c00", "name" : "Phone Service Family Plan", "type" : "service" }
+
+// Q6
+> db.products.find({type: {"$exists":true}}, {name:1,price:1,type:1})
+
+{ "_id" : "ac3", "name" : "AC3 Phone", "type" : "phone", "price" : 200 }
+{ "_id" : "ac7", "name" : "AC7 Phone", "type" : "phone", "price" : 320 }
+{ "_id" : "507d95d5719dbef170f15bf9", "name" : "AC3 Series Charger", "type" : "accessory,charger", "price" : 19 }
+{ "_id" : "507d95d5719dbef170f15bfa", "name" : "AC3 Case Green", "type" : "accessory,case", "price" : 12 }
+{ "_id" : "507d95d5719dbef170f15bfb", "name" : "Phone Extended Warranty", "type" : "warranty", "price" : 38 }
+{ "_id" : "507d95d5719dbef170f15bfc", "name" : "AC3 Case Black", "type" : "accessory,case", "price" : NaN }
+{ "_id" : "507d95d5719dbef170f15bfd", "name" : "AC3 Case Red", "type" : "accessory,case", "price" : 12 }
+{ "_id" : "507d95d5719dbef170f15bfe", "name" : "Phone Service Basic Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15bff", "name" : "Phone Service Core Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15c00", "name" : "Phone Service Family Plan", "type" : "service" }
+{ "_id" : "507d95d5719dbef170f15c01", "name" : "Cable TV Basic Service Package", "type" : "tv" }
+
+// Q7
+> db.products.find({"$and": [{type:"accessory"},{type:"case"}]},{name:1,price:1,type:1})
+-- OR
+> db.products.find({"$and": [{type:/accessory/},{type:/case/}]},{name:1,price:1,type:1})
+
+{ "_id" : "507d95d5719dbef170f15bfa", "name" : "AC3 Case Green", "type" : "accessory,case", "price" : 12 }
+{ "_id" : "507d95d5719dbef170f15bfc", "name" : "AC3 Case Black", "type" : "accessory,case", "price" : NaN }
+{ "_id" : "507d95d5719dbef170f15bfd", "name" : "AC3 Case Red", "type" : "accessory,case", "price" : 12 }
